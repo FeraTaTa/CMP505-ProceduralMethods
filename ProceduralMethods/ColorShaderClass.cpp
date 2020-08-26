@@ -20,7 +20,7 @@ ColorShaderClass::~ColorShaderClass()
 bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	// Initialize the vertex and pixel shaders.
-	return InitializeShader(device, hwnd, L"../ProceduralMethods/color_vs.hlsl", L"../Dx11Terrain_02/color_ps.hlsl");
+	return InitializeShader(device, hwnd, L"../ProceduralMethods/color_vs.hlsl", L"../ProceduralMethods/color_ps.hlsl");
 }
 
 
