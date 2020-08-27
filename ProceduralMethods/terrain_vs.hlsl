@@ -20,12 +20,14 @@ cbuffer MatrixBuffer
 struct VertexInputType
 {
     float4 position : POSITION;
+    float2 tex : TEXCOORD0;
     float3 normal: NORMAL;
 };
  
 struct PixelInputType
 {
     float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
     float3 normal: NORMAL;
 };
  
@@ -45,6 +47,9 @@ PixelInputType TerrainVertexShader(VertexInputType input)
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
+    // Save the texture coordinates of the pixel shader.
+    output.tex = input.tex;
+ 
     // Compute the normal vector for the world matrix only.
     output.normal = mul(input.normal, (float3x3)worldMatrix);
     

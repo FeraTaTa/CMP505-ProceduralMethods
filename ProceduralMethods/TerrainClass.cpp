@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "textureclass.h"
 #include "terrainclass.h"
 #include <stdio.h>
 
@@ -13,12 +14,12 @@ TerrainClass::TerrainClass(const TerrainClass& other)
 }
 
 
-TerrainClass::~TerrainClass()
+TerrainClass :: ~TerrainClass()
 {
 }
 
 
-bool TerrainClass::Initialize(ID3D11Device* device, const char* heightMapFilename)
+bool TerrainClass::Initialize(ID3D11Device* device, const char* heightMapFilename, const WCHAR* textureFilename)
 {
 	// Load in the height map for the terrain.
 	if(!LoadHeightMap(heightMapFilename))
@@ -35,6 +36,15 @@ bool TerrainClass::Initialize(ID3D11Device* device, const char* heightMapFilenam
 		return false;
 	}
 
+	// Compute the texture coordinates.
+	CalculateTextureCoordinates();
+
+	// Load the texture.
+	if(!LoadTexture(device, textureFilename))
+	{
+		return false;
+	}
+
 	// Initialize the vertex and index buffer that hold the geometry for the terrain.
 	return InitializeBuffers(device);
 }
@@ -42,6 +52,9 @@ bool TerrainClass::Initialize(ID3D11Device* device, const char* heightMapFilenam
 
 void TerrainClass::Shutdown()
 {
+	// Release the texture.
+	ReleaseTexture();
+
 	// Release the vertex and index buffer.
 	ShutdownBuffers();
 
@@ -60,6 +73,12 @@ void TerrainClass::Render(ID3D11DeviceContext* deviceContext)
 int TerrainClass::GetIndexCount()
 {
 	return m_indexCount;
+}
+
+
+ID3D11ShaderResourceView* TerrainClass::GetTexture()
+{
+	return m_Texture->GetTexture();
 }
 
 
@@ -318,8 +337,88 @@ void TerrainClass::ShutdownHeightMap()
 }
 
 
+void TerrainClass::CalculateTextureCoordinates()
+{
+	// Calculate how much to increment the texture coordinates.
+	float incrementValue = (float)TEXTURE_REPEAT / (float)m_terrainWidth;
+
+	// Count the number of times to repeat the texture.
+	int incrementCount = m_terrainWidth / TEXTURE_REPEAT;
+
+	// Initialize the tu and tv coordinate values.
+	float tuCoordinate = 0.0f;
+	float tvCoordinate = 1.0f;
+
+	// Initialize the tu and tv coordinate indices.
+	int tuCount = 0;
+	int tvCount = 0;
+
+	// Iterate over the full height map and compute the tu and tv texture coordinates for each vertex.
+	for(int j = 0; j < m_terrainHeight; j++)
+	{
+		for(int i = 0; i < m_terrainWidth; i++)
+		{
+			// Store the texture coordinates in the height map.
+			m_heightMap[(m_terrainHeight * j) + i].tu = tuCoordinate;
+			m_heightMap[(m_terrainHeight * j) + i].tv = tvCoordinate;
+
+			// Increase the tu texture coordinate by the increment value and increase the index by 1.
+			tuCoordinate += incrementValue;
+			tuCount++;
+
+			// Make sure you are at the right end of the texture, and if so, start over.
+			if(tuCount == incrementCount)
+			{
+				tuCoordinate = 0.0f;
+				tuCount = 0;
+			}
+		}
+
+		// Increment the tv texture coordinate by the increment value and increment the index by 1.
+		tvCoordinate -= incrementValue;
+		tvCount++;
+
+		// Make sure it is at the top of the texture, and if so, start over at the bottom.
+		if(tvCount == incrementCount)
+		{
+			tvCoordinate = 1.0f;
+			tvCount = 0;
+		}
+	}
+}
+
+
+bool TerrainClass::LoadTexture(ID3D11Device* device, const WCHAR* filename)
+{
+	// Create the texture object.
+	m_Texture = new TextureClass;
+	if(!m_Texture)
+	{
+		return false;
+	}
+
+	// Initialize the texture object.
+	return m_Texture->Initialize(device, filename);
+}
+
+
+void TerrainClass::ReleaseTexture()
+{
+	// Release the texture object.
+	if(m_Texture)
+	{
+		m_Texture->Shutdown();
+		delete m_Texture;
+		m_Texture = 0;
+	}
+}
+
+
 bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 {
+	float tu = 0.0f;
+	float tv = 0.0f;
+
 	// Calculate the number of vertices in the terrain mesh.
 	m_vertexCount = (m_terrainWidth - 1) * (m_terrainHeight - 1) * 6;
 
@@ -354,37 +453,67 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 			int index4 = (m_terrainHeight * (j + 1)) + (i + 1);  // Upper right.
 
 			// Upper left.
+			tv = m_heightMap[index3].tv;
+
+			// Modify the texture coordinates to cover the top edge.
+			if(tv == 1.0f) { tv = 0.0f; }
+
 			vertices[index].position = XMFLOAT3(m_heightMap[index3].x, m_heightMap[index3].y, m_heightMap[index3].z);
+			vertices[index].texture = XMFLOAT2(m_heightMap[index3].tu, tv);
 			vertices[index].normal = XMFLOAT3(m_heightMap[index3].nx, m_heightMap[index3].ny, m_heightMap[index3].nz);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
+			tu = m_heightMap[index4].tu;
+			tv = m_heightMap[index4].tv;
+
+			// Modify the texture coordinates to cover the top and right edges.
+			if(tu == 0.0f) { tu = 1.0f; }
+			if(tv == 1.0f) { tv = 0.0f; }
+
 			vertices[index].position = XMFLOAT3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
+			vertices[index].texture = XMFLOAT2(tu, tv);
 			vertices[index].normal = XMFLOAT3(m_heightMap[index4].nx, m_heightMap[index4].ny, m_heightMap[index4].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = XMFLOAT3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
+			vertices[index].texture = XMFLOAT2(m_heightMap[index1].tu, m_heightMap[index1].tv);
 			vertices[index].normal = XMFLOAT3(m_heightMap[index1].nx, m_heightMap[index1].ny, m_heightMap[index1].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = XMFLOAT3(m_heightMap[index1].x, m_heightMap[index1].y, m_heightMap[index1].z);
+			vertices[index].texture = XMFLOAT2(m_heightMap[index1].tu, m_heightMap[index1].tv);
 			vertices[index].normal = XMFLOAT3(m_heightMap[index1].nx, m_heightMap[index1].ny, m_heightMap[index1].nz);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
+			tu = m_heightMap[index4].tu;
+			tv = m_heightMap[index4].tv;
+
+			// Modify the texture coordinates to cover the top and right edges.
+			if(tu == 0.0f) { tu = 1.0f; }
+			if(tv == 1.0f) { tv = 0.0f; }
+
 			vertices[index].position = XMFLOAT3(m_heightMap[index4].x, m_heightMap[index4].y, m_heightMap[index4].z);
+			vertices[index].texture = XMFLOAT2(tu, tv);
 			vertices[index].normal = XMFLOAT3(m_heightMap[index4].nx, m_heightMap[index4].ny, m_heightMap[index4].nz);
 			indices[index] = index;
 			index++;
 
 			// Bottom right.
+			tu = m_heightMap[index2].tu;
+
+			// Modify the texture coordinates to cover the right edge.
+			if(tu == 0.0f) { tu = 1.0f; }
+
 			vertices[index].position = XMFLOAT3(m_heightMap[index2].x, m_heightMap[index2].y, m_heightMap[index2].z);
+			vertices[index].texture = XMFLOAT2(tu, m_heightMap[index2].tv);
 			vertices[index].normal = XMFLOAT3(m_heightMap[index2].nx, m_heightMap[index2].ny, m_heightMap[index2].nz);
 			indices[index] = index;
 			index++;

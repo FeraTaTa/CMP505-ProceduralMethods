@@ -79,14 +79,15 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	m_Camera->SetPosition(camera);
 
 	//Create the terrain object
-	m_Terrain = new TerrainClass;
+	m_Terrain = new  TerrainClass;
 	if(!m_Terrain)
 	{
 		return false;
 	}
 
 	//Init the terrain object
-	result = m_Terrain->Initialize(m_Direct3D->GetDevice(), "../ProceduralMethods/data/heightmap01.bmp");
+	result = m_Terrain->Initialize(m_Direct3D->GetDevice(), "../ProceduralMethods/data/heightmap01.bmp",
+		L"../ProceduralMethods/data/dirt01.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
@@ -161,7 +162,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	//init the text object
-	result = m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	result = m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), hwnd, screenWidth,	screenHeight, baseViewMatrix);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
@@ -206,7 +207,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	// Initialize the lighting object.
 	m_Light->SetAmbientColor(XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f));
 	m_Light->SetDiffuseColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-	m_Light->SetDirection(XMFLOAT3(0.0f, 0.0f, 0.75f));
+	m_Light->SetDirection(XMFLOAT3(-0.5f, -1.0f, 0.0f));
 
 	return true;
 }
@@ -315,7 +316,7 @@ bool ApplicationClass::Frame()
 	{
 		return false;
 	}
-	
+
 	// check if the application will be closed when ESC is pressed
 	if(m_Input->IsEscapePressed() == true)
 	{
@@ -333,7 +334,7 @@ bool ApplicationClass::Frame()
 	{
 		return false;
 	}
-	
+
 	//update the CPU usage in the text object
 	result = m_Text->SetCpu(m_Cpu->GetCpuPercentage(), m_Direct3D->GetDeviceContext());
 	if(!result)
@@ -377,7 +378,7 @@ bool ApplicationClass::HandleInput(float frameTime)
 	m_Position->MoveDownward(m_Input->IsZPressed());
 	m_Position->LookUpward(m_Input->IsPgUpPressed());
 	m_Position->LookDownward(m_Input->IsPgDownPressed());
-	
+
 	//get the starting position and rotation
 	m_Position->GetPosition(pos);
 	m_Position->GetRotation(rot);
@@ -422,15 +423,15 @@ bool ApplicationClass::RenderGraphics()
 	m_Terrain->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the model using the terrain shader.
-	if(!m_TerrainShader->Render(m_Direct3D->GetDeviceContext(), m_Terrain->GetIndexCount(), worldMatrix, viewMatrix,
-		projectionMatrix, m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), m_Light->GetDirection()))
+	if(!m_TerrainShader->Render(m_Direct3D->GetDeviceContext(), m_Terrain->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), m_Light->GetDirection(), m_Terrain->GetTexture()))
 	{
 		return false;
 	}
 
 	//turn off the Z buffer to start all 2D rendering
 	m_Direct3D->TurnZBufferOff();
-		
+
 	//turn on the alpha blending before rendering the text
 	m_Direct3D->TurnOnAlphaBlending();
 
