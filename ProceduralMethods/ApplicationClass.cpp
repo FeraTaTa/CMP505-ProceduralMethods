@@ -187,7 +187,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	int videoMemory = 0;
 	m_Direct3D->GetVideoCardInfo(videoCard, videoMemory);
 
-	//set eh GPU info in the text object
+	// Set the video card information in the text object.
 	result = m_Text->SetVideoCardInfo(videoCard, videoMemory, m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
@@ -201,7 +201,8 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 
 void ApplicationClass::Shutdown()
 {
-	//release the text object
+
+	// Release the text object.
 	if(m_Text)
 	{
 		m_Text->Shutdown();
@@ -270,7 +271,7 @@ void ApplicationClass::Shutdown()
 	}
 
 	//release the D3D object
-	if (m_Direct3D)
+	if(m_Direct3D)
 	{
 		m_Direct3D->Shutdown();
 		delete m_Direct3D;
