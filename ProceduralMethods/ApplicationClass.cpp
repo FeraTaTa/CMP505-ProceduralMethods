@@ -3,13 +3,14 @@
 #include "d3dclass.h"
 #include "cameraclass.h"
 #include "terrainclass.h"
-#include "colorshaderclass.h"
 #include "timerclass.h"
 #include "positionclass.h"
 #include "fpsclass.h"
 #include "cpuclass.h"
 #include "fontshaderclass.h"
 #include "textclass.h"
+#include "terrainshaderclass.h"
+#include "lightclass.h"
 #include "ApplicationClass.h"
 
 
@@ -89,21 +90,6 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
-		return false;
-	}
-
-	//create colour shader object
-	m_ColorShader = new ColorShaderClass;
-	if(!m_ColorShader)
-	{
-		return false;
-	}
-
-	//init the colour shader obj
-	result = m_ColorShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if(!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -195,12 +181,53 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		return false;
 	}
 
+	// Create the terrain shader object.
+	m_TerrainShader = new  TerrainShaderClass;
+	if(!m_TerrainShader)
+	{
+		return false;
+	}
+
+	// Initialize the terrain shader object.
+	result = m_TerrainShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the terrain shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the lighting object.
+	m_Light = new LightClass;
+	if(!m_Light)
+	{
+		return false;
+	}
+
+	// Initialize the lighting object.
+	m_Light->SetAmbientColor(XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f));
+	m_Light->SetDiffuseColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	m_Light->SetDirection(XMFLOAT3(0.0f, 0.0f, 0.75f));
+
 	return true;
 }
 
 
 void ApplicationClass::Shutdown()
 {
+	// Release the light object.
+	if(m_Light)
+	{
+		delete m_Light;
+		m_Light = 0;
+	}
+
+	// Release the terrain shader object.
+	if(m_TerrainShader)
+	{
+		m_TerrainShader->Shutdown();
+		delete m_TerrainShader;
+		m_TerrainShader = 0;
+	}
 
 	// Release the text object.
 	if(m_Text)
@@ -245,14 +272,6 @@ void ApplicationClass::Shutdown()
 	{
 		delete m_Timer;
 		m_Timer = 0;
-	}
-
-	//release the colour shader object
-	if(m_ColorShader)
-	{
-		m_ColorShader->Shutdown();
-		delete m_ColorShader;
-		m_ColorShader = 0;
 	}
 
 	//release the terrain object
@@ -402,8 +421,9 @@ bool ApplicationClass::RenderGraphics()
 	//render the terrain buffer
 	m_Terrain->Render(m_Direct3D->GetDeviceContext());
 
-	//render the model using a colour shader
-	if(!m_ColorShader->Render(m_Direct3D->GetDeviceContext(), m_Terrain->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix))
+	// Render the model using the terrain shader.
+	if(!m_TerrainShader->Render(m_Direct3D->GetDeviceContext(), m_Terrain->GetIndexCount(), worldMatrix, viewMatrix,
+		projectionMatrix, m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), m_Light->GetDirection()))
 	{
 		return false;
 	}

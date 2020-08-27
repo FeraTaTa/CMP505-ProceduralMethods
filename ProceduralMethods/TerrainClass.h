@@ -6,10 +6,16 @@ private:
 	struct VertexType
 	{
 		XMFLOAT3 position;
-	    XMFLOAT4 color;
+	    XMFLOAT3 normal;
 	};
 
 	struct HeightMapType 
+	{ 
+		float x, y, z;
+		double nx, ny, nz;
+	};
+
+	struct VectorType 
 	{ 
 		float x, y, z;
 	};
@@ -28,6 +34,7 @@ public:
 private:
 	bool LoadHeightMap(const char*);
 	void NormalizeHeightMap();
+	bool CalculateNormals();
 	void ShutdownHeightMap();
 
 	bool InitializeBuffers(ID3D11Device*);

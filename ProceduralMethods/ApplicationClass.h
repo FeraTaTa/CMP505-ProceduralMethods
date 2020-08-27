@@ -13,13 +13,15 @@ class D3DClass;
 class InputClass;
 class CameraClass;
 class TerrainClass;
-class ColorShaderClass;
+
 class TimerClass;
 class PositionClass;
 class FpsClass;
 class CpuClass;
 class FontShaderClass;
 class TextClass;
+class TerrainShaderClass;
+class LightClass;
 
 
 class ApplicationClass
@@ -42,11 +44,12 @@ private:
 	D3DClass* m_Direct3D = nullptr;
 	CameraClass* m_Camera = nullptr;
 	TerrainClass* m_Terrain = nullptr;
-	ColorShaderClass* m_ColorShader = nullptr;
 	TimerClass* m_Timer = nullptr;
 	PositionClass* m_Position = nullptr;
 	FpsClass* m_Fps = nullptr;
 	CpuClass* m_Cpu = nullptr;
 	FontShaderClass* m_FontShader = nullptr;
 	TextClass* m_Text = nullptr;
+	TerrainShaderClass* m_TerrainShader = nullptr;
+	LightClass* m_Light = nullptr;
 };

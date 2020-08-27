@@ -55,6 +55,8 @@
     <ClCompile Include="TimerClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainShaderClass.cpp" />
+    <ClCompile Include="LightClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h">
@@ -117,6 +119,8 @@
     <ClInclude Include="TimerClass.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainShaderClass.h" />
+    <ClInclude Include="LightClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\font.dds">
