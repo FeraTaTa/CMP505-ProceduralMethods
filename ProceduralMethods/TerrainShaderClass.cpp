@@ -31,24 +31,6 @@ void TerrainShaderClass::Shutdown()
 }
 
 
-bool TerrainShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor, XMFLOAT3 lightDirection,
-	ID3D11ShaderResourceView* texture)
-{
-	// Set the shader parameters to be used for rendering.
-	if(!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, ambientColor, diffuseColor,
-		lightDirection, texture))
-	{
-		return false;
-	}
-
-	// Render the set buffer to the shader.
-	RenderShader(deviceContext, indexCount);
-
-	return true;
-}
-
-
 bool TerrainShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, const WCHAR* vsFilename, const WCHAR* psFilename)
 {
 	ID3D10Blob* errorMessage = nullptr;

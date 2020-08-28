@@ -57,6 +57,8 @@
     </ClCompile>
     <ClCompile Include="TerrainShaderClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
+    <ClCompile Include="QuadTreeClass.cpp" />
+    <ClCompile Include="FrustumClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h">
@@ -121,6 +123,8 @@
     </ClInclude>
     <ClInclude Include="TerrainShaderClass.h" />
     <ClInclude Include="LightClass.h" />
+    <ClInclude Include="QuadTreeClass.h" />
+    <ClInclude Include="FrustumClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\font.dds">

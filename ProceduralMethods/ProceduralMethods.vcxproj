@@ -165,9 +165,11 @@
     <ClInclude Include="FontClass.h" />
     <ClInclude Include="FontShaderClass.h" />
     <ClInclude Include="FpsClass.h" />
+    <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="PositionClass.h" />
+    <ClInclude Include="QuadTreeClass.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
@@ -184,6 +186,7 @@
     <ClCompile Include="CpuClass.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="ProceduralMethods.cpp" />
     <ClCompile Include="FontClass.cpp" />
@@ -191,6 +194,7 @@
     <ClCompile Include="FpsClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
     <ClCompile Include="PositionClass.cpp" />
+    <ClCompile Include="QuadTreeClass.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
