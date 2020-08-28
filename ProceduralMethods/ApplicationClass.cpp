@@ -1,19 +1,19 @@
-#include  "stdafx.h"
-#include  "inputclass.h"
-#include  "d3dclass.h"
-#include  "cameraclass.h"
-#include  "terrainclass.h"
-#include  "timerclass.h"
-#include  "positionclass.h"
-#include  "fpsclass.h"
-#include  "cpuclass.h"
-#include  "fontshaderclass.h"
-#include  "textclass.h"
-#include  "terrainshaderclass.h"
-#include  "lightclass.h"
-#include  "frustumclass.h"
-#include  "quadtreeclass.h"
-#include  "ApplicationClass.h"
+#include "stdafx.h"
+#include "inputclass.h"
+#include "d3dclass.h"
+#include "cameraclass.h"
+#include "terrainclass.h"
+#include "timerclass.h"
+#include "positionclass.h"
+#include "fpsclass.h"
+#include "cpuclass.h"
+#include "fontshaderclass.h"
+#include "textclass.h"
+#include "terrainshaderclass.h"
+#include "lightclass.h"
+#include "frustumclass.h"
+#include "quadtreeclass.h"
+#include "ApplicationClass.h"
 
 
 ApplicationClass::ApplicationClass()
@@ -21,7 +21,7 @@ ApplicationClass::ApplicationClass()
 }
 
 
-ApplicationClass::ApplicationClass(const  ApplicationClass&  other)
+ApplicationClass::ApplicationClass(const ApplicationClass& other)
 {
 }
 
@@ -31,43 +31,43 @@ ApplicationClass::~ApplicationClass()
 }
 
 
-bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWidth, int  screenHeight)
+bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
 	// Create the input object.  The input object will be used to handle reading the keyboard and mouse input from the user.
-	m_Input = new  InputClass;
+	m_Input = new InputClass;
 	if(!m_Input)
 	{
-		return  false;
+		return false;
 	}
 
 	// Initialise the input object
-	bool  result = m_Input->Initialize(hinstance, hwnd, screenWidth, screenHeight);
+	bool result = m_Input->Initialize(hinstance, hwnd, screenWidth, screenHeight);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	// Create D3D object
-	m_Direct3D = new  D3DClass;
+	m_Direct3D = new D3DClass;
 	if(!m_Direct3D)
 	{
-		return  false;
+		return false;
 	}
 
 	//Init the D3D obj
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize  DirectX  11.", L"Error", MB_OK);
-		return  false;
+		MessageBox(hwnd, L"Could not initialize DirectX 11.", L"Error", MB_OK);
+		return false;
 	}
 
 	//create the camera object
-	m_Camera = new  CameraClass;
+	m_Camera = new CameraClass;
 	if(!m_Camera)
 	{
-		return  false;
+		return false;
 	}
 
 	// Initialize a base view matrix with the camera for 2D user interface rendering.
@@ -81,10 +81,10 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	m_Camera->SetPosition(camera);
 
 	//Create the terrain object
-	m_Terrain = new  TerrainClass;
+	m_Terrain = new TerrainClass;
 	if(!m_Terrain)
 	{
-		return  false;
+		return false;
 	}
 
 	//Init the terrain object
@@ -93,14 +93,14 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	//create the timer obj
-	m_Timer = new  TimerClass;
+	m_Timer = new TimerClass;
 	if(!m_Timer)
 	{
-		return  false;
+		return false;
 	}
 
 	//init the timer object
@@ -108,44 +108,44 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the timer object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	//create a position object
-	m_Position = new  PositionClass;
+	m_Position = new PositionClass;
 	if(!m_Position)
 	{
-		return  false;
+		return false;
 	}
 
 	//set the initial position of the viewer to be the same as the initial camera pos
 	m_Position->SetPosition(camera);
 
 	//create an fps object
-	m_Fps = new  FpsClass;
+	m_Fps = new FpsClass;
 	if(!m_Fps)
 	{
-		return  false;
+		return false;
 	}
 
 	//init the fps object
 	m_Fps->Initialize();
 
 	//create the CPU object
-	m_Cpu = new  CpuClass;
+	m_Cpu = new CpuClass;
 	if(!m_Cpu)
 	{
-		return  false;
+		return false;
 	}
 
 	//init the CPU object
 	m_Cpu->Initialize();
 
 	//create the font shader object
-	m_FontShader = new  FontShaderClass;
+	m_FontShader = new FontShaderClass;
 	if(!m_FontShader)
 	{
-		return  false;
+		return false;
 	}
 
 	//init the font shader object
@@ -153,14 +153,14 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	//create the text object
-	m_Text = new  TextClass;
+	m_Text = new TextClass;
 	if(!m_Text)
 	{
-		return  false;
+		return false;
 	}
 
 	//init the text object
@@ -168,12 +168,12 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	//get GPU info
-	char  videoCard[128] = { 0 , };
-	int  videoMemory = 0;
+	char videoCard[128] = { 0, };
+	int videoMemory = 0;
 	m_Direct3D->GetVideoCardInfo(videoCard, videoMemory);
 
 	// Set the video card information in the text object.
@@ -181,14 +181,14 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not set video card info in the text object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	// Create the terrain shader object.
-	m_TerrainShader = new  TerrainShaderClass;
+	m_TerrainShader = new TerrainShaderClass;
 	if(!m_TerrainShader)
 	{
-		return  false;
+		return false;
 	}
 
 	// Initialize the terrain shader object.
@@ -196,14 +196,14 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the terrain shader object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
 	// Create the lighting object.
-	m_Light = new  LightClass;
+	m_Light = new LightClass;
 	if(!m_Light)
 	{
-		return  false;
+		return false;
 	}
 
 	// Initialize the lighting object.
@@ -212,17 +212,17 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	m_Light->SetDirection(XMFLOAT3(-0.5f, -1.0f, 0.0f));
 
 	// Create the frustum object.
-	m_Frustum = new  FrustumClass;
+	m_Frustum = new FrustumClass;
 	if(!m_Frustum)
 	{
-		return  false;
+		return false;
 	}
 
 	// Create the quad tree object.
-	m_QuadTree = new  QuadTreeClass;
+	m_QuadTree = new QuadTreeClass;
 	if(!m_QuadTree)
 	{
-		return  false;
+		return false;
 	}
 
 	// Initialize the quad tree object.
@@ -230,34 +230,34 @@ bool  ApplicationClass::Initialize(HINSTANCE  hinstance, HWND hwnd, int screenWi
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the quad tree object.", L"Error", MB_OK);
-		return  false;
+		return false;
 	}
 
-	return  true;
+	return true;
 }
 
 
-void  ApplicationClass::Shutdown()
+void ApplicationClass::Shutdown()
 {
 	// Release the quad tree object.
 	if(m_QuadTree)
 	{
 		m_QuadTree->Shutdown();
-		delete  m_QuadTree;
+		delete m_QuadTree;
 		m_QuadTree = 0;
 	}
 
 	// Release the frustum object.
 	if(m_Frustum)
 	{
-		delete  m_Frustum;
+		delete m_Frustum;
 		m_Frustum = 0;
 	}
 
 	// Release the light object.
 	if(m_Light)
 	{
-		delete  m_Light;
+		delete m_Light;
 		m_Light = 0;
 	}
 
@@ -265,7 +265,7 @@ void  ApplicationClass::Shutdown()
 	if(m_TerrainShader)
 	{
 		m_TerrainShader->Shutdown();
-		delete  m_TerrainShader;
+		delete m_TerrainShader;
 		m_TerrainShader = 0;
 	}
 
@@ -273,7 +273,7 @@ void  ApplicationClass::Shutdown()
 	if(m_Text)
 	{
 		m_Text->Shutdown();
-		delete  m_Text;
+		delete m_Text;
 		m_Text = 0;
 	}
 
@@ -281,7 +281,7 @@ void  ApplicationClass::Shutdown()
 	if(m_FontShader)
 	{
 		m_FontShader->Shutdown();
-		delete  m_FontShader;
+		delete m_FontShader;
 		m_FontShader = 0;
 	}
 
@@ -289,28 +289,28 @@ void  ApplicationClass::Shutdown()
 	if(m_Cpu)
 	{
 		m_Cpu->Shutdown();
-		delete  m_Cpu;
+		delete m_Cpu;
 		m_Cpu = 0;
 	}
 
 	//release the fps object
 	if(m_Fps)
 	{
-		delete  m_Fps;
+		delete m_Fps;
 		m_Fps = 0;
 	}
 
 	//release the position object
 	if(m_Position)
 	{
-		delete  m_Position;
+		delete m_Position;
 		m_Position = 0;
 	}
 
 	//release the timer object
 	if(m_Timer)
 	{
-		delete  m_Timer;
+		delete m_Timer;
 		m_Timer = 0;
 	}
 
@@ -318,14 +318,14 @@ void  ApplicationClass::Shutdown()
 	if(m_Terrain)
 	{
 		m_Terrain->Shutdown();
-		delete  m_Terrain;
+		delete m_Terrain;
 		m_Terrain = 0;
 	}
 
 	//release the camera object
 	if(m_Camera)
 	{
-		delete  m_Camera;
+		delete m_Camera;
 		m_Camera = 0;
 	}
 
@@ -333,7 +333,7 @@ void  ApplicationClass::Shutdown()
 	if(m_Direct3D)
 	{
 		m_Direct3D->Shutdown();
-		delete  m_Direct3D;
+		delete m_Direct3D;
 		m_Direct3D = 0;
 	}
 
@@ -341,25 +341,25 @@ void  ApplicationClass::Shutdown()
 	if(m_Input)
 	{
 		m_Input->Shutdown();
-		delete  m_Input;
+		delete m_Input;
 		m_Input = 0;
 	}
 }
 
 
-bool  ApplicationClass::Frame()
+bool ApplicationClass::Frame()
 {
 	//read user input
-	bool  result = m_Input->Frame();
+	bool result = m_Input->Frame();
 	if(!result)
 	{
-		return  false;
+		return false;
 	}
 
 	// check if the application will be closed when ESC is pressed
 	if(m_Input->IsEscapePressed() == true)
 	{
-		return  false;
+		return false;
 	}
 
 	// update timer, fps, and cpu
@@ -371,35 +371,40 @@ bool  ApplicationClass::Frame()
 	result = m_Text->SetFps(m_Fps->GetFps(), m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
-		return  false;
+		return false;
 	}
 
 	//update the CPU usage in the text object
 	result = m_Text->SetCpu(m_Cpu->GetCpuPercentage(), m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
-		return  false;
+		return false;
 	}
 
 	//perform frame input processing
 	result = HandleInput(m_Timer->GetTime());
 	if(!result)
 	{
-		return  false;
+		return false;
+	}
+
+	// Get the current position of the camera.
+	XMFLOAT3 position = m_Camera->GetPosition();
+
+	// Get the height of the triangle just below the given camera position.
+	float height = 0.0f;
+	if(m_QuadTree->GetHeightAtPosition(position.x, position.z, height))
+	{
+		// If there is a triangle under the camera, place the camera in two units.
+		m_Camera->SetPosition(XMFLOAT3(position.x, height + 2.0f, position.z));
 	}
 
 	//render the graphics
-	result = RenderGraphics();
-	if(!result)
-	{
-		return  false;
-	}
-
-	return  result;
+	return RenderGraphics();
 }
 
 
-bool  ApplicationClass::HandleInput(float  frameTime)
+bool ApplicationClass::HandleInput(float frameTime)
 {
 	XMFLOAT3 pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	XMFLOAT3 rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -429,20 +434,20 @@ bool  ApplicationClass::HandleInput(float  frameTime)
 	//update the position value on the text object
 	if(!m_Text->SetCameraPosition(pos, m_Direct3D->GetDeviceContext()))
 	{
-		return  false;
+		return false;
 	}
 
 	//update the rotation value on the text object
 	if(!m_Text->SetCameraRotation(rot, m_Direct3D->GetDeviceContext()))
 	{
-		return  false;
+		return false;
 	}
 
-	return  true;
+	return true;
 }
 
 
-bool  ApplicationClass::RenderGraphics()
+bool ApplicationClass::RenderGraphics()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 
@@ -465,7 +470,7 @@ bool  ApplicationClass::RenderGraphics()
 	if(!m_TerrainShader->SetShaderParameters(m_Direct3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), m_Light->GetDirection(), m_Terrain->GetTexture()))
 	{
-		return  false;
+		return false;
 	}
 
 	// Render the terrain using a quad tree and terrain shader.
@@ -474,7 +479,7 @@ bool  ApplicationClass::RenderGraphics()
 	// Set the number of terrain triangles rendered after some were removed.
 	if(!m_Text->SetRenderCount(m_QuadTree->GetDrawCount(), m_Direct3D->GetDeviceContext()))
 	{
-		return  false;
+		return false;
 	}
 
 	//turn off the Z buffer to start all 2D rendering
@@ -486,7 +491,7 @@ bool  ApplicationClass::RenderGraphics()
 	//render the text user interface element
 	if(!m_Text->Render(m_Direct3D->GetDeviceContext(), m_FontShader, worldMatrix, orthoMatrix))
 	{
-		return  false;
+		return false;
 	}
 
 	//turn off the alpha blending after rendering the text
@@ -498,5 +503,5 @@ bool  ApplicationClass::RenderGraphics()
 	//display the rendered scene 
 	m_Direct3D->EndScene();
 
-	return  true;
+	return true;
 }
