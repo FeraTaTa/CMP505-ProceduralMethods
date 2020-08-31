@@ -175,10 +175,10 @@ bool TerrainClass::GenerateHeightMap()
 	float range_max = 500.0f;
 	float range_min = 0.0f;
 	
-	srand(time(NULL));
-	float xOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
-	float yOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
-	float zOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+	srand(time(0));
+	double xOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+	double yOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+	double zOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
 
 	// Read the image data into the height map.
 	int m_terrainDepth = 16;
