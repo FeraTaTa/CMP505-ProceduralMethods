@@ -55,7 +55,7 @@ bool QuadTreeClass::Initialize(TerrainClass* terrain, ID3D11Device* device)
 	// Build quad tree recursively based on vertex list data and mesh dimensions.
 	CreateTreeNode(m_parentNode, centerX, centerZ, width, device);
 
-	// Put the list of vertices because the quad tree has vertices at each node.
+	// Free the list of vertices because the quad tree has vertices at each node.
 	if(m_vertexList)
 	{
 		delete[] m_vertexList;
