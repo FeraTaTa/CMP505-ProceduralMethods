@@ -1,6 +1,6 @@
 #pragma  once
 
-
+#include "NoiseClass.h"
 
 /////////////
 // GLOBALS //
@@ -47,6 +47,7 @@ public:
 
 private:
 	bool  LoadHeightMap(const  char *);
+	bool  GenerateHeightMap();
 	void  NormalizeHeightMap();
 	bool  CalculateNormals();
 	void  ShutdownHeightMap();
@@ -59,6 +60,7 @@ private:
 	void  ShutdownBuffers();
 
 private:
+	NoiseClass noise;
 	int  m_terrainWidth = 0;
 	int  m_terrainHeight = 0;
 	HeightMapType *  m_heightMap = nullptr;

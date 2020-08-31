@@ -2,7 +2,7 @@
 #include  "textureclass.h"
 #include  "terrainclass.h"
 #include  < stdio.h >
- 
+#include <time.h>
  
 TerrainClass:: TerrainClass()
 {
@@ -21,11 +21,13 @@ TerrainClass::~ TerrainClass()
  
 bool  TerrainClass::Initialize(ID3D11Device *  device,  const  char *  heightMapFilename,  const  WCHAR *  textureFilename)
 {
-	// Load in the height map for the terrain.
-    if ( ! LoadHeightMap(heightMapFilename))
+	//// Load in the height map for the terrain.
+    //if ( ! LoadHeightMap(heightMapFilename))
+    if ( !GenerateHeightMap())
     {
         return  false ;
     }
+	
  
     // Normalize the height of the height map.
     NormalizeHeightMap();
@@ -153,6 +155,53 @@ bool  TerrainClass::LoadHeightMap( const  char *  filename)
     bitmapImage  =  0 ;
  
     return  true ;
+}
+
+bool TerrainClass::GenerateHeightMap()
+{
+	// Set the dimensions of the terrain.
+	m_terrainWidth = 200;
+	m_terrainHeight = 200;
+
+	// Create the structure to hold the height map data.
+	m_heightMap = new  HeightMapType[m_terrainWidth  *  m_terrainHeight];
+	if(!m_heightMap)
+	{
+		return  false;
+	}
+
+	float scaleAmplitude = 200.0f;
+	float scalePerlin = 0.5f;
+	float range_max = 500.0f;
+	float range_min = 0.0f;
+	
+	srand(time(NULL));
+	float xOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+	float yOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+	float zOffset = (double)rand() / (RAND_MAX + 1) * (range_max - range_min) + range_min;
+
+	// Read the image data into the height map.
+	int m_terrainDepth = 16;
+		
+	for(int j = 0; j < m_terrainHeight; j++)
+	{
+		for(int i = 0; i < m_terrainWidth; i++)
+		{
+			int  index = (m_terrainHeight  *  j) + i;
+
+			float xin = (float) i / m_terrainWidth * scalePerlin + xOffset;
+			float zin = (float) j / m_terrainHeight * scalePerlin + zOffset;
+
+			m_heightMap[index].x = (float)i;
+
+			m_heightMap[index].y = (float)noise.Noise2D(xin,zin)*scaleAmplitude;
+
+			m_heightMap[index].z = (float)j;
+
+		}
+	}
+
+	return  true;
 }
  
  

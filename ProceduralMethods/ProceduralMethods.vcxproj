@@ -168,6 +168,7 @@
     <ClInclude Include="FrustumClass.h" />
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="LightClass.h" />
+    <ClInclude Include="NoiseClass.h" />
     <ClInclude Include="PositionClass.h" />
     <ClInclude Include="QuadTreeClass.h" />
     <ClInclude Include="stdafx.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
+    <ClCompile Include="NoiseClass.cpp" />
     <ClCompile Include="ProceduralMethods.cpp" />
     <ClCompile Include="FontClass.cpp" />
     <ClCompile Include="FontShaderClass.cpp" />

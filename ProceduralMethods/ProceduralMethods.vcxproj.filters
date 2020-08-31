@@ -59,6 +59,7 @@
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="QuadTreeClass.cpp" />
     <ClCompile Include="FrustumClass.cpp" />
+    <ClCompile Include="NoiseClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h">
@@ -125,6 +126,7 @@
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="QuadTreeClass.h" />
     <ClInclude Include="FrustumClass.h" />
+    <ClInclude Include="NoiseClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\font.dds">
